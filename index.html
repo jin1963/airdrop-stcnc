@@ -1,0 +1,245 @@
+c_nc_airdrop"}
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Sixteen Chain Airdrop</title>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+
+<style>
+
+body{
+background:#000;
+color:#FFD700;
+font-family:Arial;
+text-align:center;
+margin:0;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:#111;
+border:1px solid #FFD700;
+border-radius:10px;
+padding:20px;
+margin-top:20px;
+}
+
+button{
+background:#FFD700;
+color:#000;
+border:none;
+padding:12px 20px;
+margin:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+border-radius:6px;
+}
+
+button:hover{
+background:#ffcc00;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:6px;
+border:1px solid #FFD700;
+background:#111;
+color:#FFD700;
+}
+
+textarea{
+width:90%;
+height:200px;
+padding:10px;
+margin:10px;
+border-radius:6px;
+border:1px solid #FFD700;
+background:#111;
+color:#FFD700;
+}
+
+select{
+padding:10px;
+margin:10px;
+background:#111;
+color:#FFD700;
+border:1px solid #FFD700;
+}
+
+#wallet{
+color:#00ffcc;
+font-size:14px;
+}
+
+#progress{
+margin-top:20px;
+color:#00ffcc;
+font-size:16px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Sixteen Chain STC / NC Airdrop</h2>
+
+<button onclick="connectWallet()">Connect Wallet</button>
+
+<p id="wallet"></p>
+
+<div class="card">
+
+<select id="token">
+
+<option value="STC">STC</option>
+<option value="NC">NC</option>
+
+</select>
+
+<br>
+
+<textarea id="wallets" placeholder="วาง wallet address ทีละบรรทัด"></textarea>
+
+<br>
+
+<input id="amount" placeholder="Amount per wallet">
+
+<br>
+
+<button onclick="batchAirdrop()">Send Airdrop</button>
+
+</div>
+
+<p id="progress"></p>
+
+</div>
+
+<script>
+
+const STC_ADDRESS="0x12730990De18c6864e45d22f007EBebaFbf6c76b";
+const NC_ADDRESS="0xA0db9B043EA0387BA0f7480189F0392EdAA72108";
+
+const ERC20_ABI=[
+
+{
+"name":"balanceOf",
+"type":"function",
+"stateMutability":"view",
+"inputs":[{"name":"account","type":"address"}],
+"outputs":[{"type":"uint256"}]
+},
+
+{
+"name":"decimals",
+"type":"function",
+"stateMutability":"view",
+"inputs":[],
+"outputs":[{"type":"uint8"}]
+},
+
+{
+"name":"transfer",
+"type":"function",
+"stateMutability":"nonpayable",
+"inputs":[
+{"name":"to","type":"address"},
+{"name":"amount","type":"uint256"}
+],
+"outputs":[{"type":"bool"}]
+}
+
+];
+
+let web3;
+let account;
+
+async function connectWallet(){
+
+if(window.ethereum){
+
+web3=new Web3(window.ethereum);
+
+await window.ethereum.request({
+method:'eth_requestAccounts'
+});
+
+const accounts=await web3.eth.getAccounts();
+
+account=accounts[0];
+
+document.getElementById("wallet").innerText=
+"Connected: "+account;
+
+}
+
+}
+
+async function batchAirdrop(){
+
+const tokenType=document.getElementById("token").value;
+
+let tokenAddress;
+
+if(tokenType==="STC"){
+tokenAddress=STC_ADDRESS;
+}else{
+tokenAddress=NC_ADDRESS;
+}
+
+const token=new web3.eth.Contract(
+ERC20_ABI,
+tokenAddress
+);
+
+const decimals=await token.methods.decimals().call();
+
+const wallets=document
+.getElementById("wallets")
+.value
+.split("\n");
+
+const amount=document
+.getElementById("amount")
+.value;
+
+const value=web3.utils.toBN(amount)
+.mul(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)));
+
+for(let i=0;i<wallets.length;i++){
+
+const w=wallets[i].trim();
+
+if(w){
+
+document.getElementById("progress").innerText=
+"Sending "+(i+1)+" / "+wallets.length;
+
+await token.methods.transfer(w,value).send({
+from:account
+});
+
+}
+
+}
+
+document.getElementById("progress").innerText=
+"Airdrop Completed";
+
+}
+
+</script>
