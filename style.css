@@ -1,0 +1,84 @@
+body{
+background:#000;
+color:#FFD700;
+font-family:Arial, Helvetica, sans-serif;
+text-align:center;
+margin:0;
+padding:0;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+padding:30px;
+}
+
+h2{
+color:#FFD700;
+margin-bottom:20px;
+}
+
+button{
+background:#FFD700;
+color:#000;
+border:none;
+padding:12px 22px;
+margin:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+border-radius:6px;
+}
+
+button:hover{
+background:#ffcc00;
+}
+
+input{
+width:90%;
+padding:12px;
+margin:10px;
+border-radius:6px;
+border:1px solid #FFD700;
+background:#111;
+color:#FFD700;
+}
+
+textarea{
+width:90%;
+height:200px;
+padding:12px;
+margin:10px;
+border-radius:6px;
+border:1px solid #FFD700;
+background:#111;
+color:#FFD700;
+}
+
+select{
+padding:10px;
+margin:10px;
+background:#111;
+color:#FFD700;
+border:1px solid #FFD700;
+}
+
+#wallet{
+color:#00ffcc;
+font-size:14px;
+}
+
+#progress{
+margin-top:20px;
+color:#00ffcc;
+font-size:16px;
+}
+
+.card{
+background:#111;
+border:1px solid #FFD700;
+border-radius:10px;
+padding:20px;
+margin-top:20px;
+box-shadow:0 0 10px rgba(255,215,0,0.3);
+}
